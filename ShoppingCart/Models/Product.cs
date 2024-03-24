@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ShoppingCart.Repository;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ShoppingCart.Models
 {
-    public class Product
+    public class Product : IEntity
     {
         public int Id { get; set; }
 

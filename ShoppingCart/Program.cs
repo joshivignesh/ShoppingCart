@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using ShoppingCart.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,6 +35,10 @@ builder.Services.AddControllersWithViews();
 //});
 
 builder.Services.AddCors();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "ShoppingCart", Version = "v1" });
+});
 
 var app = builder.Build();
 
@@ -54,19 +59,27 @@ app.UseStaticFiles();
 
 app.UseRouting();
 app.UseAuthentication();
-app.Use(async (context, next) =>
-{
-    if (!context.User.Identity?.IsAuthenticated ?? false)
-    {
-        context.Response.StatusCode = 401;
-        await context.Response.WriteAsync("Not Authenticated");
-    }
-    else
-    {
-        await next();
-    }
-});
+//app.Use(async (context, next) =>
+//{
+//    if (!context.User.Identity?.IsAuthenticated ?? false)
+//    {
+//        context.Response.StatusCode = 401;
+//        await context.Response.WriteAsync("Not Authenticated");
+//    }
+//    else
+//    {
+//        await next();
+//    }
+//});
+// Enable middleware to serve generated Swagger as a JSON endpoint.
+app.UseSwagger();
 
+// Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+// specifying the Swagger JSON endpoint.
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "ShoppingCart");
+});
 app.UseAuthorization();
 
 app.MapControllerRoute(
